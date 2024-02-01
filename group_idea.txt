@@ -1,0 +1,2 @@
+my next idea,
+is to a bar chart, that display the information of saved the saved expense.
