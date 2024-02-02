@@ -1,0 +1,17 @@
+Modification Proposal:
+
+1. **Objective:**
+   Reduce the size of the main window to improve the user interface and optimize screen space.
+
+2. **Current Configuration:**
+   The main window is currently set to the size of 700x550 pixels using the following code:
+
+   root.geometry("700x550")
+
+   Proposed Change:
+Update the size of the main window to a more compact dimension. For example:
+root.geometry("600x400")
+#This change aims to create a more streamlined and efficient user interface while maintaining readability and usability.
+
+@Asyllaw
+modify that.
