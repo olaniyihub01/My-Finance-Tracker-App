@@ -1,23 +1,21 @@
 import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import sqlite3
 
-root = tk.Tk()
-root.title("Mypersonal Finance Tracker")
-root.geometry("700x550")
-root.configure(bg="black", borderwidth="30")
+window = tk.Tk()
+window.title("My Finance Tracker App")
+window.geometry("450x450")
+window.configure(bg="#ecf0f1", borderwidth="30")
 
-# trying to solve an error
-entry_description = tk.Entry()  # Add root here
-entry_amount = tk.Entry()       # Add root here
-combo_category = ttk.Combobox()  # Add root here
-combo_category.grid(row=2, column=1)
+# create GUI components
+entry_description = ttk.Entry(window)
+entry_amount = ttk.Entry()
+combo_category = ttk.Combobox()
+combo_category.grid(row=2, column=1, padx=5, pady=5)
 
-# this was the solution to previous error
+
 def create_table():
-    # Create SQLite database and expenses table if not exists
     conn = sqlite3.connect("finance_tracker.db")
     cursor = conn.cursor()
     cursor.execute('''
@@ -33,7 +31,6 @@ def create_table():
 
 
 def add_expense(description, amount, category):
-    # Add expense to the database
     conn = sqlite3.connect("finance_tracker.db")
     cursor = conn.cursor()
     cursor.execute("INSERT INTO expenses (description, amount, category) VALUES (?, ?, ?)",
@@ -42,8 +39,7 @@ def add_expense(description, amount, category):
     conn.close()
 
 
-def show_chart():
-    # Generate and display a pie chart based on expense categories
+def show_pie_chart():
     conn = sqlite3.connect("finance_tracker.db")
     cursor = conn.cursor()
     cursor.execute("SELECT category, SUM(amount) FROM expenses GROUP BY category")
@@ -59,10 +55,25 @@ def show_chart():
         print("No data to display.")
 
 
-def save_expense():
-    # Retrieve user input and save expense
-    global entry_description, entry_amount, combo_category  # Add global here
+def show_bar_chart():
+    conn = sqlite3.connect("finance_tracker.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT category, SUM(amount) FROM expenses GROUP BY category")
+    data = cursor.fetchall()
+    conn.close()
 
+    if data:
+        categories, amounts = zip(*data)
+        plt.bar(categories, amounts)
+        plt.xlabel("Categories")
+        plt.ylabel("Total Amount")
+        plt.title("Expense Distribution (Bar Chart)")
+        plt.show()
+    else:
+        print("No data to display.")
+
+
+def save_expense():
     description = entry_description.get()
     amount = entry_amount.get()
     category = combo_category.get()
@@ -75,30 +86,24 @@ def save_expense():
 
 
 def main():
-    global entry_description, entry_amount, combo_category
     create_table()
 
-    tk.Label(root, text="WELCOME", font=("Bold", 30), bg="brown")
+    ttk.Label(window, text="Description:", foreground="#2c3e50", borderwidth="30").grid(row=0, column=0, padx=5, pady=5)
+    entry_description.grid(row=0, column=2, padx=5, pady=5)
 
-    # Entry widgets
-    tk.Label(root, text="Description:").grid(row=1, column=0)
-    entry_description.grid(row=1, column=1)
+    ttk.Label(window, text="Amount:", foreground="#2c3e50", borderwidth="30").grid(row=1, column=0, padx=5, pady=5)
+    entry_amount.grid(row=1, column=2, padx=5, pady=5)
 
-    tk.Label(root, text="Amount:").grid(row=3, column=0)
-    entry_amount.grid(row=3, column=1)
-
-    tk.Label(root, text="Category:").grid(row=6, column=0)
-    categories = ["Groceries", "Entertainment", "Utilities", "Other"]
+    ttk.Label(window, text="Category:", foreground="#2c3e50", borderwidth="30").grid(row=2, column=0, padx=5, pady=5)
+    categories = ["Groceries", "Entertainment", "Utilities", "clothing", "others"]
     combo_category.config(values=categories)
-    combo_category.grid(row=6, column=1)
+    combo_category.grid(row=2, column=2, padx=5, pady=5)
 
-    # Button to save expense
-    tk.Button(root, text="Save Expense", command=save_expense).grid(row=9, column=0, columnspan=2, pady=10)
+    ttk.Button(window, text="Save Expense", command=save_expense).grid(row=11, column=2, columnspan=2, pady=10)
+    ttk.Button(window, text="Expense With Pie Chart", command=show_pie_chart).grid(row=12, column=1, pady=5)
+    ttk.Button(window, text="Expense With Bar Chart", command=show_bar_chart).grid(row=13, column=1, pady=5)
 
-    # Button to show expense distribution chart
-    tk.Button(root, text="Show Expense Chart", command=show_chart).grid(row=12, column=0, columnspan=2)
+    window.mainloop()
 
-    root.mainloop()
 
 main()
-
