@@ -6,5 +6,5 @@ GETTING STARTED.
 
 Tired of struggling to keep track of your finances? This app is the solution you've been looking for! With its user-friendly interface and powerful features, you'll be able to manage your money like a pro. Get ready to take control of your financial future and make the most of your money. Let's get started.
 
-USAGE.
+USAGE.![App GUI](https://github.com/olaniyihub01/My-Finance-Tracker-App/assets/150334196/0c524ea3-47e5-42a4-8412-e03fe163e79e)
 
